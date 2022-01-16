@@ -25,10 +25,14 @@ function BaseBar({
   data,
   isLegend,
   title,
+  yAxesCallbackFunc,
+  tooltipCallbackFunc,
 }: {
   data: ChartData<'bar', (number | ScatterDataPoint | null)[], unknown>;
   isLegend?: boolean;
   title: string;
+  yAxesCallbackFunc?: any;
+  tooltipCallbackFunc?: any;
 }) {
   const options: any = {
     responsive: true,
@@ -86,6 +90,7 @@ function BaseBar({
           color: 'rgba(238, 238, 238,0.6)',
         },
         ticks: {
+          callback: yAxesCallbackFunc,
           beginAtZero: true,
           font: {
             size: 12,
@@ -129,6 +134,7 @@ function BaseBar({
         },
       },
       tooltip: {
+        callbacks: tooltipCallbackFunc,
         mode: 'index',
         intersect: false,
         position: 'nearest',

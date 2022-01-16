@@ -3,12 +3,15 @@ import {
   Box,
   CircularProgress,
   Grid,
+  makeStyles,
+  styled,
   Switch,
   Typography,
 } from '@material-ui/core';
 import { ChartData, ChartDataset, ScatterDataPoint } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { economizeApiRef } from '../../api';
+import { formatWithCurrencyUnit } from '../../ulits/ulits';
 import BaseBar from '../BaseComponents/BaseBar';
 function getRandomColor() {
   var letters = '0123456789ABCDEF'.split('');
@@ -98,11 +101,38 @@ const ServiceMonthlyBarChart = () => {
             justifyContent="flex-end"
             alignItems="center"
           >
-            <Typography variant="body2">Credit</Typography>
+            <Typography variant="body2">Show Credit</Typography>
             <Switch checked={Credit} onChange={() => setCredit(!Credit)} />
           </Grid>
           <Box sx={{ height: 500 }}>
-            <BaseBar isLegend title="Top Service" data={data} />
+            <BaseBar
+              yAxesCallbackFunc={label => {
+                const formattedValue = formatWithCurrencyUnit(
+                  (label === undefined ? 0 : parseFloat(label)).toFixed(2),
+                );
+                return formattedValue;
+              }}
+              tooltipCallbackFunc={{
+                label: function (context) {
+                  const label = context.dataset.label;
+
+                  const labelValue = context.parsed.y;
+                  return (
+                    label +
+                    ': ' +
+                    formatWithCurrencyUnit(
+                      (labelValue === undefined
+                        ? 0
+                        : parseFloat(labelValue)
+                      ).toFixed(2),
+                    )
+                  );
+                },
+              }}
+              isLegend
+              title="Top Service"
+              data={data}
+            />
           </Box>
         </>
       )}

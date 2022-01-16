@@ -94,10 +94,150 @@ export const color = [
   'rgb(136, 120, 252)', // purple-300
 ];
 
-// export const formatWithCurrencyUnit = (cost: number, code = 'USD') => {
-//   if (!(code in currencyCodeSymbolMap)) {
-//     return numberWithCommas(cost).toString() + ' ' + code;
-//   }
-//   const symbol = currencyCodeSymbolMap[code];
-//   return symbol + ' ' + getNumberUnit(cost);
-// };
+export const formatWithCurrencyUnit = (cost: string, code = 'USD') => {
+  if (!(code in currencyCodeSymbolMap)) {
+    return numberWithCommas(cost).toString() + ' ' + code;
+  }
+  const symbol = currencyCodeSymbolMap[code];
+  return symbol + ' ' + getNumberUnit(cost);
+};
+
+const numberWithCommas = x => {
+  return round2Places(parseFloat(x)).toLocaleString('en-US');
+};
+
+const round2Places = num => {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
+function getNumberUnit(labelValue) {
+  const sign = Math.sign(Number(labelValue));
+  // Nine Zeroes for Billions
+  return Number(labelValue) >= 1.0e9
+    ? sign * (Number(labelValue) / 1.0e9).toFixed(2) + 'B'
+    : // Six Zeroes for Millions
+    Number(labelValue) >= 1.0e6
+    ? sign * (Number(labelValue) / 1.0e6).toFixed(2) + 'M'
+    : // Three Zeroes for Thousands
+    Number(labelValue) >= 1.0e3
+    ? sign * (Number(labelValue) / 1.0e3).toFixed(2) + 'K'
+    : Number(labelValue) === 0.0e3
+    ? sign * Number(labelValue)
+    : Number(labelValue).toFixed(2);
+}
+
+const currencyCodes = [
+  {
+    code: 'USD',
+    symbol: '$',
+  },
+  {
+    code: 'EUR',
+    symbol: '€',
+  },
+  {
+    code: 'INR',
+    symbol: '₹',
+  },
+  {
+    code: 'AUD',
+    symbol: '',
+  },
+  {
+    code: 'NOK',
+    symbol: '',
+  },
+  {
+    code: 'BRL',
+    symbol: '',
+  },
+  {
+    code: 'CAD',
+    symbol: '',
+  },
+  {
+    code: 'CZK',
+    symbol: '',
+  },
+  {
+    code: 'DKK',
+    symbol: '',
+  },
+  {
+    code: 'HKD',
+    symbol: '',
+  },
+  {
+    code: 'IDR',
+    symbol: 'Rp',
+  },
+  {
+    code: 'ILS',
+    symbol: '',
+  },
+  {
+    code: 'JPY',
+    symbol: '',
+  },
+  {
+    code: 'CHF',
+    symbol: '',
+  },
+  {
+    code: 'MYR',
+    symbol: '',
+  },
+  {
+    code: 'MXN',
+    symbol: '',
+  },
+  {
+    code: 'NZD',
+    symbol: '',
+  },
+  {
+    code: 'PLN',
+    symbol: '',
+  },
+  {
+    code: 'RUB',
+    symbol: '',
+  },
+  {
+    code: 'SGD',
+    symbol: '',
+  },
+  {
+    code: 'KRW',
+    symbol: '',
+  },
+  {
+    code: 'SEK',
+    symbol: '',
+  },
+  {
+    code: 'TWD',
+    symbol: '',
+  },
+  {
+    code: 'THB',
+    symbol: '',
+  },
+  {
+    code: 'TRY',
+    symbol: '',
+  },
+  {
+    code: 'GBP',
+    symbol: '',
+  },
+  {
+    code: 'VND',
+    symbol: '',
+  },
+];
+
+const currencyCodeSymbolMap = currencyCodes.reduce((map, obj) => {
+  map[obj.code] = obj.symbol;
+  return map;
+}, {});
