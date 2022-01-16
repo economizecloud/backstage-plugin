@@ -72,7 +72,7 @@ function BaseLine({
           drawTicks: false,
         },
         ticks: {
-          callback: yAxesCallbackFunc,
+          // callback: yAxesCallbackFunc,
           beginAtZero: true,
           font: {
             size: 12,
@@ -145,7 +145,7 @@ function BaseLine({
         intersect: false,
         position: 'average',
         backgroundColor: 'rgba(0,0,0,0.7)',
-        callbacks: tooltipCallbackFunc,
+        // callbacks: tooltipCallbackFunc,
         caretSize: 10,
         caretPadding: 10,
         titleFontFamily: 'Inter',
