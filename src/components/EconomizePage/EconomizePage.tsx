@@ -1,21 +1,34 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import { Header, Page, Content } from '@backstage/core-components';
-import { MonthlyLineChart } from '../MonthlyChart';
+import { MonthlyLineChart, ServiceMonthlyBarChart } from '../MonthlyChart';
 import { DailyLineChart } from '../DailyChart';
+import { WeeklyLineChart } from '../WeeklyChart';
 
 export const EconomizePage = () => {
   return (
-    <Page themeId="tool">
+    <Page themeId="service">
       <Header
         title="Economize Cloud"
         subtitle="Your cloud infrastructure costs, demystified"
       ></Header>
       <Content>
-        <Grid container spacing={3} direction="column">
-          <Grid item>
+        <Grid container>
+          <Grid item md={6}>
             <MonthlyLineChart />
-            <DailyLineChart />
+          </Grid>
+          <Grid item md={6}>
+            <ServiceMonthlyBarChart />
+          </Grid>
+          <Grid item md={6}>
+            <Box sx={{ height: 500 }}>
+              <DailyLineChart />
+            </Box>
+          </Grid>
+          <Grid item md={6}>
+            <Box sx={{ height: 500 }}>
+              <WeeklyLineChart />
+            </Box>
           </Grid>
         </Grid>
       </Content>

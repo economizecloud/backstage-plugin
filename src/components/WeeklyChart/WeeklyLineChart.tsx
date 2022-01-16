@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { economizeApiRef } from '../../api';
 import BaseLine from '../BaseComponents/BaseLine';
 
-const MonthlyLineChart = () => {
-  const MonthlyData = useApi(economizeApiRef);
+const DailyLineChart = () => {
+  const DailyData = useApi(economizeApiRef);
   const [data, setData] = useState<
     ChartData<'line', (number | ScatterDataPoint | null)[], unknown>
   >({
@@ -13,8 +13,9 @@ const MonthlyLineChart = () => {
     datasets: [],
   });
 
-  const fetchMonthlyData = async () => {
-    const monthData = await MonthlyData.getMonthlyCost();
+  const fetchDailyData = async () => {
+    const monthData = await DailyData.getWeeklyCost();
+    console.log({ monthData });
     setData({
       labels: monthData.labels,
       datasets: [
@@ -28,10 +29,10 @@ const MonthlyLineChart = () => {
   };
 
   useEffect(() => {
-    fetchMonthlyData();
+    fetchDailyData();
   }, []);
 
-  return <BaseLine isLegend={false} title="Monthly" data={data} />;
+  return <BaseLine isLegend={false} title="Weekly" data={data} />;
 };
 
-export default MonthlyLineChart;
+export default DailyLineChart;

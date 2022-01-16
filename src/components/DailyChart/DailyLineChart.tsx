@@ -15,6 +15,7 @@ const DailyLineChart = () => {
 
   const fetchDailyData = async () => {
     const monthData = await DailyData.getDailyCost();
+    console.log({ monthData });
     setData({
       labels: monthData.labels,
       datasets: [
@@ -31,11 +32,7 @@ const DailyLineChart = () => {
     fetchDailyData();
   }, []);
 
-  return (
-    <div>
-      <BaseLine title="Daily" data={data} />
-    </div>
-  );
+  return <BaseLine isLegend={false} title="Daily" data={data} />;
 };
 
 export default DailyLineChart;

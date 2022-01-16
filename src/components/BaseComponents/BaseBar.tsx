@@ -1,39 +1,34 @@
 import React from 'react';
 import {
+  Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
   ChartData,
   ScatterDataPoint,
 } from 'chart.js';
-import ChartJS from 'chart.js/auto';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+import { color } from '../../ulits/ulits';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 );
-
-function BaseLine({
+function BaseBar({
   data,
   isLegend,
   title,
-  yAxesCallbackFunc,
-  tooltipCallbackFunc,
 }: {
-  data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
+  data: ChartData<'bar', (number | ScatterDataPoint | null)[], unknown>;
   isLegend?: boolean;
   title: string;
-  yAxesCallbackFunc?: any;
-  tooltipCallbackFunc?: any;
 }) {
   const options: any = {
     responsive: true,
@@ -52,13 +47,6 @@ function BaseLine({
       },
     },
     pointStyle: 'circle',
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-        top: 0,
-      },
-    },
     hover: { intersect: false },
     scales: {
       x: {
@@ -72,7 +60,6 @@ function BaseLine({
           drawTicks: false,
         },
         ticks: {
-          callback: yAxesCallbackFunc,
           beginAtZero: true,
           font: {
             size: 12,
@@ -126,9 +113,11 @@ function BaseLine({
     plugins: {
       legend: {
         display: isLegend,
+        position: 'bottom',
+        text: title,
         labels: {
           boxWidth: 10,
-          display: isLegend,
+          display: true,
           usePointStyle: true,
           pointStyle: 'circle',
           padding: 10,
@@ -138,14 +127,12 @@ function BaseLine({
             color: 'rgb(134, 147, 157)',
           },
         },
-        position: 'botton',
       },
       tooltip: {
         mode: 'index',
         intersect: false,
-        position: 'average',
+        position: 'nearest',
         backgroundColor: 'rgba(0,0,0,0.7)',
-        callbacks: tooltipCallbackFunc,
         caretSize: 10,
         caretPadding: 10,
         titleFontFamily: 'Inter',
@@ -155,13 +142,27 @@ function BaseLine({
         borderColor: 'rgba(54,54,54,0.20)',
         borderWidth: 2.5,
       },
-      title: {
-        display: true,
-        text: title,
-      },
     },
   };
 
-  return <Line options={options} data={data} />;
+  data.datasets = data.datasets.map((item, index) => {
+    return {
+      ...item,
+      fill: true,
+      pointStyle: 'circle',
+      backgroundColor: color[index % color.length],
+      borderColor: color[index % color.length],
+      pointBackgroundColor: color[index % color.length],
+      barThickness: 30,
+      pointHoverRadius: 7,
+      pointBorderWidth: 1,
+      pointHoverBorderWidth: 4,
+      pointHoverBackgroundColor: 'rgb(255, 255, 255)',
+      categoryPercentage: 1.0,
+      barPercentage: 0.7,
+    };
+  });
+
+  return <Bar options={options} data={data} />;
 }
-export default BaseLine;
+export default BaseBar;

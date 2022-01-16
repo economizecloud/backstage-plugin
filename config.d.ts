@@ -15,15 +15,15 @@ export interface Config {
     /**
      * @visibility frontend
      */
-    Database: string;
+    database: string;
     /**
      * @visibility frontend
      */
-    OutputLocation: string;
+    outputLocation: string;
     /**
      * @visibility frontend
      */
-    WorkGroup: string;
+    workGroup: string;
     /**
      * @visibility frontend
      */
