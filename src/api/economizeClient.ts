@@ -4,6 +4,7 @@ import { subYears, subMonths, format } from 'date-fns';
 import {
   CostExplorerClient,
   GetCostAndUsageCommand,
+  GetCostAndUsageCommandInput,
 } from '@aws-sdk/client-cost-explorer';
 
 import { GetQuery } from './GetQuery';
@@ -18,7 +19,7 @@ export class EconomomizeClient implements EconomizeApi {
     this.configApi = options.configApi;
   }
 
-  async getMonthlyCost(): Promise<MonthlyCost> {
+  async getMonthlyCost(isCredit: boolean): Promise<MonthlyCost> {
     const monthly: MonthlyCost = {
       labels: [],
       data: [],
@@ -34,17 +35,25 @@ export class EconomomizeClient implements EconomizeApi {
     let lastYear = format(subYears(new Date(), 1), 'yyyy-MM-dd');
     let firstYear = format(new Date(), 'yyyy-MM-dd');
 
-    const command = new GetCostAndUsageCommand({
+    let optionsCommand: GetCostAndUsageCommandInput = {
       TimePeriod: { Start: lastYear, End: firstYear },
-      Filter: {
-        Dimensions: {
-          Key: 'RECORD_TYPE',
-          Values: ['Credit'],
-        },
-      },
       Metrics: ['UNBLENDED_COST'],
       Granularity: 'MONTHLY',
-    });
+    };
+
+    if (isCredit) {
+      optionsCommand = {
+        ...optionsCommand,
+        Filter: {
+          Dimensions: {
+            Key: 'RECORD_TYPE',
+            Values: ['Credit'],
+          },
+        },
+      };
+    }
+
+    const command = new GetCostAndUsageCommand(optionsCommand);
 
     const data = await client.send(command);
 
@@ -60,7 +69,7 @@ export class EconomomizeClient implements EconomizeApi {
     });
     return monthly;
   }
-  async getDailyCost(): Promise<MonthlyCost> {
+  async getDailyCost(isCredit: boolean): Promise<MonthlyCost> {
     const monthly: MonthlyCost = {
       labels: [],
       data: [],
@@ -76,18 +85,25 @@ export class EconomomizeClient implements EconomizeApi {
     let lastYear = format(subMonths(new Date(), 1), 'yyyy-MM-dd');
     let firstYear = format(new Date(), 'yyyy-MM-dd');
 
-    console.log({ firstYear, lastYear });
-    const command = new GetCostAndUsageCommand({
+    let optionsCommand: GetCostAndUsageCommandInput = {
       TimePeriod: { Start: lastYear, End: firstYear },
-      Filter: {
-        Dimensions: {
-          Key: 'RECORD_TYPE',
-          Values: ['Credit'],
-        },
-      },
       Metrics: ['UNBLENDED_COST'],
       Granularity: 'DAILY',
-    });
+    };
+
+    if (isCredit) {
+      optionsCommand = {
+        ...optionsCommand,
+        Filter: {
+          Dimensions: {
+            Key: 'RECORD_TYPE',
+            Values: ['Credit'],
+          },
+        },
+      };
+    }
+
+    const command = new GetCostAndUsageCommand(optionsCommand);
 
     const data = await client.send(command);
 
@@ -103,7 +119,7 @@ export class EconomomizeClient implements EconomizeApi {
     });
     return monthly;
   }
-  async getWeeklyCost(): Promise<WeeklyCost> {
+  async getWeeklyCost(isCredit: boolean): Promise<WeeklyCost> {
     const monthly: WeeklyCost = {
       labels: [],
       data: [],
@@ -115,6 +131,7 @@ export class EconomomizeClient implements EconomizeApi {
         this.configApi.getString('economize.table'),
         this.configApi.getString('economize.database'),
         format(subMonths(new Date(), 1), 'yyyy-MM-dd'),
+        isCredit,
       ),
     );
 

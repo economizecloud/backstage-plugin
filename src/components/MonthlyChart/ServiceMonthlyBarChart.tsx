@@ -1,26 +1,21 @@
 import { useApi } from '@backstage/core-plugin-api';
 import {
   Box,
+  Card,
+  CardContent,
+  CardHeader,
   CircularProgress,
   Grid,
-  makeStyles,
-  styled,
   Switch,
   Typography,
 } from '@material-ui/core';
 import { ChartData, ChartDataset, ScatterDataPoint } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { economizeApiRef } from '../../api';
+import { ScrollAnchor } from '../../ulits/scroll';
 import { formatWithCurrencyUnit } from '../../ulits/ulits';
 import BaseBar from '../BaseComponents/BaseBar';
-function getRandomColor() {
-  var letters = '0123456789ABCDEF'.split('');
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+
 const ServiceMonthlyBarChart = () => {
   const MonthlyData = useApi(economizeApiRef);
   const [data, setData] = useState<
@@ -51,13 +46,10 @@ const ServiceMonthlyBarChart = () => {
       if (isDatasetExist[arr.service]) {
         dataset[isDatasetExist[arr.service]].data.push(arr.amount);
       } else {
-        const color = getRandomColor();
         isDatasetExist[arr.service] = count;
         dataset.push({
           data: [arr.amount],
           label: arr.name,
-          backgroundColor: color,
-          borderColor: color,
         });
         count++;
       }
@@ -83,18 +75,11 @@ const ServiceMonthlyBarChart = () => {
   }, [Credit]);
 
   return (
-    <div>
-      {Loading ? (
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <CircularProgress />
-        </Grid>
-      ) : (
-        <>
+    <Card style={{ backgroundColor: 'white', color: 'black' }}>
+      <ScrollAnchor id="top-components" />
+      <CardHeader
+        title="Top Components"
+        action={
           <Grid
             container
             direction="row"
@@ -102,41 +87,62 @@ const ServiceMonthlyBarChart = () => {
             alignItems="center"
           >
             <Typography variant="body2">Show Credit</Typography>
-            <Switch checked={Credit} onChange={() => setCredit(!Credit)} />
-          </Grid>
-          <Box sx={{ height: 500 }}>
-            <BaseBar
-              yAxesCallbackFunc={label => {
-                const formattedValue = formatWithCurrencyUnit(
-                  (label === undefined ? 0 : parseFloat(label)).toFixed(2),
-                );
-                return formattedValue;
-              }}
-              tooltipCallbackFunc={{
-                label: function (context) {
-                  const label = context.dataset.label;
-
-                  const labelValue = context.parsed.y;
-                  return (
-                    label +
-                    ': ' +
-                    formatWithCurrencyUnit(
-                      (labelValue === undefined
-                        ? 0
-                        : parseFloat(labelValue)
-                      ).toFixed(2),
-                    )
-                  );
-                },
-              }}
-              isLegend
-              title="Top Service"
-              data={data}
+            <Switch
+              disabled={Loading}
+              checked={Credit}
+              onChange={() => setCredit(!Credit)}
             />
-          </Box>
-        </>
-      )}
-    </div>
+          </Grid>
+        }
+      />
+      <CardContent>
+        <Box sx={{ height: 500 }}>
+          <div>
+            {Loading ? (
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CircularProgress />
+              </Grid>
+            ) : (
+              <Box sx={{ height: 500 }}>
+                <BaseBar
+                  yAxesCallbackFunc={label => {
+                    const formattedValue = formatWithCurrencyUnit(
+                      (label === undefined ? 0 : parseFloat(label)).toFixed(2),
+                    );
+                    return formattedValue;
+                  }}
+                  tooltipCallbackFunc={{
+                    label: function (context) {
+                      const label = context.dataset.label;
+
+                      const labelValue = context.parsed.y;
+                      return (
+                        label +
+                        ': ' +
+                        formatWithCurrencyUnit(
+                          (labelValue === undefined
+                            ? 0
+                            : parseFloat(labelValue)
+                          ).toFixed(2),
+                        )
+                      );
+                    },
+                  }}
+                  isLegend
+                  title="Top Service"
+                  data={data}
+                />
+              </Box>
+            )}
+          </div>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 

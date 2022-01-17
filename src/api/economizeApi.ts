@@ -16,9 +16,9 @@ export interface ServiceCost {
 }
 
 export interface EconomizeApi {
-  getMonthlyCost: () => Promise<MonthlyCost>;
-  getDailyCost: () => Promise<MonthlyCost>;
-  getWeeklyCost: () => Promise<WeeklyCost>;
+  getMonthlyCost: (isCredit: boolean) => Promise<MonthlyCost>;
+  getDailyCost: (isCredit: boolean) => Promise<MonthlyCost>;
+  getWeeklyCost: (isCredit: boolean) => Promise<WeeklyCost>;
   getTopServices: (isCredit: boolean) => Promise<ServiceCost[]>;
 }
 

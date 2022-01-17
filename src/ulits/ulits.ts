@@ -1,4 +1,7 @@
-import { StartQueryExecutionCommand } from '@aws-sdk/client-athena';
+import {
+  GetQueryExecutionCommand,
+  StartQueryExecutionCommand,
+} from '@aws-sdk/client-athena';
 import { GetQueryResultsCommand } from '@aws-sdk/client-athena';
 import { AthenaClient } from '@aws-sdk/client-athena';
 import { ConfigApi } from '@backstage/core-plugin-api';
@@ -71,7 +74,25 @@ export const fetchQuery = async (configApi: ConfigApi, QueryString: string) => {
   });
   const response = await athenaClient.send(fetchWeeklyCost);
 
-  await waitFor(2000);
+  const getQueryExecution = new GetQueryExecutionCommand({
+    QueryExecutionId: response.QueryExecutionId,
+  });
+
+  let retries = 0;
+  let retry = true;
+  do {
+    await waitFor(2 ** retries * 100);
+    const getResultRes = await athenaClient.send(getQueryExecution);
+    const Status = getResultRes.QueryExecution.Status.State;
+    if (Status === 'SUCCEEDED') {
+      retry = false;
+    } else if (['RUNNING', 'QUEUED'].includes(Status)) {
+      retry = true;
+    } else {
+      retry = false;
+    }
+    retries++;
+  } while (retry && retries < 5);
 
   const getResultQuery = new GetQueryResultsCommand({
     QueryExecutionId: response.QueryExecutionId,
