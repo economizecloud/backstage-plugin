@@ -2,12 +2,37 @@
 
 Welcome to the economize plugin!
 
-_This plugin was created through the Backstage CLI_
+## Setup and Integration
 
-## Getting started
+1. In the [packages/app](https://github.com/backstage/backstage/blob/master/packages/app/) directory of your backstage
+   instance, add the plugin as a package.json dependency:
 
-Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn start` in the root directory, and then navigating to [/economize](http://localhost:3000/economize).
+```shell
+$ yarn add @economize/plugin-economize
+```
 
-You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
-This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
-It is only meant for local development, and the setup for it can be found inside the [/dev](./dev) directory.
+2. Import page to [App.tsx](https://github.com/backstage/backstage/blob/master/packages/app/src/App.tsx):
+
+```tsx
+import { EconomizePage } from '@economize/plugin-economize';
+```
+
+3. And add a new route to [App.tsx](https://github.com/backstage/backstage/blob/master/packages/app/src/App.tsx):
+
+```tsx
+<Route path="/economize" element={<EconomizePage />} />
+```
+
+4. Update [app-config.yaml](https://github.com/backstage/backstage/blob/master/app-config.yaml) to add a new proxy
+   config:
+
+```yaml
+economize:
+  table: ''
+  accessKeyId: ''
+  secretAccessKey: ''
+  region: ''
+  Database: ''
+  OutputLocation: ''
+  WorkGroup: ''
+```
