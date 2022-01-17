@@ -8,13 +8,13 @@ Welcome to the economize plugin!
    instance, add the plugin as a package.json dependency:
 
 ```shell
-$ yarn add @economize/plugin-economize
+$ yarn add @economize/backstage-plugin
 ```
 
 2. Import page to [App.tsx](https://github.com/backstage/backstage/blob/master/packages/app/src/App.tsx):
 
 ```tsx
-import { EconomizePage } from '@economize/plugin-economize';
+import { EconomizePage } from '@economize/backstage-plugin';
 ```
 
 3. And add a new route to [App.tsx](https://github.com/backstage/backstage/blob/master/packages/app/src/App.tsx):
