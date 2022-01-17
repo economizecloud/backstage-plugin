@@ -6,7 +6,11 @@ import {
   GetCostAndUsageCommand,
   GetCostAndUsageCommandInput,
 } from '@aws-sdk/client-cost-explorer';
-
+import {
+  OrganizationsClient,
+  ListRootsCommand,
+  ListOrganizationalUnitsForParentCommand,
+} from '@aws-sdk/client-organizations';
 import { GetQuery } from './GetQuery';
 import { fetchQuery, getWeekRange } from '../ulits/ulits';
 type Options = {
@@ -17,6 +21,23 @@ export class EconomomizeClient implements EconomizeApi {
 
   constructor(options: Options) {
     this.configApi = options.configApi;
+  }
+
+  async getOrgAndProject(): Promise<string> {
+    const client = new OrganizationsClient({
+      region: this.configApi.getString('economize.region'),
+      credentials: {
+        accessKeyId: this.configApi.getString('economize.accessKeyId'),
+        secretAccessKey: this.configApi.getString('economize.secretAccessKey'),
+      },
+    });
+    const acc = new ListRootsCommand({});
+    const data1 = await client.send(acc);
+    const org = new ListOrganizationalUnitsForParentCommand({
+      ParentId: data1.Roots[0].Id,
+    });
+    const data2 = await client.send(org);
+    return data2.OrganizationalUnits[0].Name;
   }
 
   async getMonthlyCost(isCredit: boolean): Promise<MonthlyCost> {
@@ -158,6 +179,7 @@ export class EconomomizeClient implements EconomizeApi {
 
     return monthly;
   }
+
   async getTopServices(isCredit: boolean): Promise<ServiceCost[]> {
     const topService: ServiceCost[] = [];
     const fetchResultData = await fetchQuery(

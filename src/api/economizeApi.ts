@@ -20,6 +20,7 @@ export interface EconomizeApi {
   getDailyCost: (isCredit: boolean) => Promise<MonthlyCost>;
   getWeeklyCost: (isCredit: boolean) => Promise<WeeklyCost>;
   getTopServices: (isCredit: boolean) => Promise<ServiceCost[]>;
+  getOrgAndProject: () => Promise<string>;
 }
 
 export const economizeApiRef = createApiRef<EconomizeApi>({

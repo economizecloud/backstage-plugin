@@ -23,6 +23,8 @@
   "dependencies": {
     "@aws-sdk/client-athena": "^3.47.0",
     "@aws-sdk/client-cost-explorer": "^3.47.0",
+    "@aws-sdk/client-iam": "^3.47.0",
+    "@aws-sdk/client-organizations": "^3.47.0",
     "@backstage/core-components": "^0.8.3",
     "@backstage/core-plugin-api": "^0.4.1",
     "@backstage/theme": "^0.2.14",
