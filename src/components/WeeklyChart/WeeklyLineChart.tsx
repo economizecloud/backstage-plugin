@@ -62,7 +62,7 @@ const DailyLineChart = () => {
             justifyContent="flex-end"
             alignItems="center"
           >
-            <Typography variant="body2">Show Credit</Typography>
+            <Typography variant="body2">Show Credits</Typography>
             <Switch
               disabled={Loading}
               checked={Credit}

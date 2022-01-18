@@ -1,5 +1,5 @@
 import { ConfigApi } from '@backstage/core-plugin-api';
-import { EconomizeApi, MonthlyCost, ServiceCost, WeeklyCost } from '.';
+import { EconomizeApi, MonthlyCost, OrgName, ServiceCost, WeeklyCost } from '.';
 import { subYears, subMonths, format } from 'date-fns';
 import {
   CostExplorerClient,
@@ -10,9 +10,11 @@ import {
   OrganizationsClient,
   ListRootsCommand,
   ListOrganizationalUnitsForParentCommand,
+  DescribeOrganizationCommand,
 } from '@aws-sdk/client-organizations';
 import { GetQuery } from './GetQuery';
 import { fetchQuery, getWeekRange } from '../ulits/ulits';
+import axios from 'axios';
 type Options = {
   configApi: ConfigApi;
 };
@@ -23,7 +25,7 @@ export class EconomomizeClient implements EconomizeApi {
     this.configApi = options.configApi;
   }
 
-  async getOrgAndProject(): Promise<string> {
+  async getOrgAndProject(): Promise<OrgName> {
     const client = new OrganizationsClient({
       region: this.configApi.getString('economize.region'),
       credentials: {
@@ -31,13 +33,20 @@ export class EconomomizeClient implements EconomizeApi {
         secretAccessKey: this.configApi.getString('economize.secretAccessKey'),
       },
     });
+    const orgdes = new DescribeOrganizationCommand({});
+    const orgdesRes = await client.send(orgdes);
+
     const acc = new ListRootsCommand({});
     const data1 = await client.send(acc);
     const org = new ListOrganizationalUnitsForParentCommand({
       ParentId: data1.Roots[0].Id,
     });
     const data2 = await client.send(org);
-    return data2.OrganizationalUnits[0].Name;
+    return {
+      name: data2.OrganizationalUnits[0].Name,
+      OrgID: orgdesRes.Organization.Id,
+      AccID: orgdesRes.Organization.MasterAccountId,
+    };
   }
 
   async getMonthlyCost(isCredit: boolean): Promise<MonthlyCost> {
@@ -209,7 +218,18 @@ export class EconomomizeClient implements EconomizeApi {
     return topService;
   }
 
-  // getTopTags(): string {
-  //   return this.configApi.getString('economize.table');
-  // }
+  async getAnomalyDelection(
+    startDate: string,
+    endDate: string,
+  ): Promise<string> {
+    const data = await axios.post(
+      'https://localhost:8443/public/aws/anomaly_detection',
+      {
+        endDate: '2022-01-18 14:40:00-07',
+        startDate: '2022-01-10 14:40:00-07',
+        type: 'Prophet',
+      },
+    );
+    return;
+  }
 }
