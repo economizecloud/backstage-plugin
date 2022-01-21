@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Grid } from '@material-ui/core';
-import { Header, Page, Content, HeaderLabel } from '@backstage/core-components';
+import { Page, Content } from '@backstage/core-components';
 import { MonthlyLineChart, ServiceMonthlyBarChart } from '../MonthlyChart';
 import { DailyLineChart } from '../DailyChart';
 import { WeeklyLineChart } from '../WeeklyChart';
 import Menu from '../Menu';
-import { useApi } from '@backstage/core-plugin-api';
-import { economizeApiRef } from '../../api';
 import HeaderBanner from './HeaderBanner';
+import { AnomalyDetection } from '../AnomalyDetection';
 
 export const EconomizePage = () => {
   return (
@@ -33,6 +32,9 @@ export const EconomizePage = () => {
               </Grid>
               <Grid item>
                 <ServiceMonthlyBarChart />
+              </Grid>
+              <Grid item>
+                <AnomalyDetection />
               </Grid>
             </Grid>
           </Grid>

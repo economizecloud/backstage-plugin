@@ -28,5 +28,13 @@ export interface Config {
      * @visibility frontend
      */
     region: string;
+    /**
+     * @visibility frontend
+     */
+    apiKey: string;
+    /**
+     * @visibility frontend
+     */
+    hostname: string;
   };
 }
