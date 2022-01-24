@@ -1,5 +1,12 @@
 import { ConfigApi } from '@backstage/core-plugin-api';
-import { EconomizeApi, MonthlyCost, OrgName, ServiceCost, WeeklyCost } from '.';
+import {
+  Anomalies,
+  EconomizeApi,
+  MonthlyCost,
+  OrgName,
+  ServiceCost,
+  WeeklyCost,
+} from '.';
 import { subYears, subMonths, format } from 'date-fns';
 import {
   CostExplorerClient,
@@ -219,17 +226,29 @@ export class EconomomizeClient implements EconomizeApi {
   }
 
   async getAnomalyDelection(
-    startDate: string,
-    endDate: string,
-  ): Promise<string> {
-    const data = await axios.post(
-      'https://localhost:8443/public/aws/anomaly_detection',
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Anomalies> {
+    const data = await axios.post<Anomalies>(
+
+      'https://app.economize.cloud/api/public/aws/anomaly_detection',
       {
-        endDate: '2022-01-18 14:40:00-07',
-        startDate: '2022-01-10 14:40:00-07',
+        endDate: endDate.toISOString().slice(0, -5).replace('T', ' ') + '-07',
+        startDate:
+          startDate.toISOString().slice(0, -5).replace('T', ' ') + '-07',
         type: 'Prophet',
+        region: this.configApi.getString('economize.region'),
+        OrgID: (await this.getOrgAndProject()).OrgID,
+        table: this.configApi.getString('economize.table'),
+        database: this.configApi.getString('economize.database'),
+        workGroup: this.configApi.getString('economize.workGroup'),
+        outputLocation: this.configApi.getString('economize.outputLocation'),
+        access_token: this.configApi.getString('economize.accessKeyId'),
+        access_sercet: this.configApi.getString('economize.secretAccessKey'),
+        api_key: this.configApi.getOptionalString('economize.apiKey'),
+        hostname: this.configApi.getOptionalString('economize.hostname'),
       },
     );
-    return;
+    return data.data;
   }
 }
