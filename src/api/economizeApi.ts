@@ -19,6 +19,20 @@ export interface OrgName {
   OrgID: string;
   AccID: string;
 }
+export interface Anomalies {
+  anomalies: Anomaly[];
+  bounds: Anomaly[];
+  project_id: string;
+  total_anomaly_cost: number;
+}
+
+export interface Anomaly {
+  actual_cost: number;
+  anomalyTimestamp: string;
+  anomalyTimestampISO: string;
+  expected_cost_range: number[];
+  label: string;
+}
 
 export interface EconomizeApi {
   getMonthlyCost: (isCredit: boolean) => Promise<MonthlyCost>;
@@ -26,7 +40,7 @@ export interface EconomizeApi {
   getWeeklyCost: (isCredit: boolean) => Promise<WeeklyCost>;
   getTopServices: (isCredit: boolean) => Promise<ServiceCost[]>;
   getOrgAndProject: () => Promise<OrgName>;
-  getAnomalyDelection: (startDate: string, endDate: string) => Promise<string>;
+  getAnomalyDelection: (startDate: Date, endDate: Date) => Promise<Anomalies>;
 }
 
 export const economizeApiRef = createApiRef<EconomizeApi>({
