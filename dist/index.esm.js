@@ -1,4 +1,4 @@
-export { E as EconomizePage, b as EconomomizeClient, e as economizeApiRef, a as economizePlugin } from './esm/index-c8c414d5.esm.js';
+export { E as EconomizePage, b as EconomomizeClient, e as economizeApiRef, a as economizePlugin } from './esm/index-9e3f9969.esm.js';
 import '@backstage/core-plugin-api';
 import 'date-fns';
 import '@aws-sdk/client-cost-explorer';

@@ -413,7 +413,7 @@ class EconomomizeClient {
     return topService;
   }
   async getAnomalyDelection(startDate, endDate) {
-    const data = await axios.post("http://localhost:8443/public/aws/anomaly_detection", {
+    const data = await axios.post("https://app.economize.cloud/api/public/aws/anomaly_detection", {
       endDate: endDate.toISOString().slice(0, -5).replace("T", " ") + "-07",
       startDate: startDate.toISOString().slice(0, -5).replace("T", " ") + "-07",
       type: "Prophet",
@@ -451,9 +451,9 @@ const economizePlugin = createPlugin({
 });
 const EconomizePage = economizePlugin.provide(createRoutableExtension({
   name: "EconomizePage",
-  component: () => import('./index-907ac397.esm.js').then((m) => m.EconomizePage),
+  component: () => import('./index-6bb47c9c.esm.js').then((m) => m.EconomizePage),
   mountPoint: rootRouteRef
 }));
 
 export { EconomizePage as E, economizePlugin as a, EconomomizeClient as b, color as c, economizeApiRef as e, formatWithCurrencyUnit as f };
-//# sourceMappingURL=index-c8c414d5.esm.js.map
+//# sourceMappingURL=index-9e3f9969.esm.js.map

@@ -238,8 +238,7 @@ export class EconomomizeClient implements EconomizeApi {
     endDate: Date,
   ): Promise<Anomalies> {
     const data = await axios.post<Anomalies>(
-      // 'https://app.economize.cloud/api/public/aws/anomaly_detection',
-      'http://localhost:8443/public/aws/anomaly_detection',
+      'https://app.economize.cloud/api/public/aws/anomaly_detection',
       {
         endDate: endDate.toISOString().slice(0, -5).replace('T', ' ') + '-07',
         startDate:

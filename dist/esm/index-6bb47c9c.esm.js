@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext, useRef } from 'r
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 import { Card, CardHeader, Grid, Typography, Switch, CardContent, Box, CircularProgress, Paper, MenuList, MenuItem, ListItemText, Select } from '@material-ui/core';
 import { Progress, Header, HeaderLabel, WarningPanel, Page, Content } from '@backstage/core-components';
-import { e as economizeApiRef, f as formatWithCurrencyUnit, c as color } from './index-c8c414d5.esm.js';
+import { e as economizeApiRef, f as formatWithCurrencyUnit, c as color } from './index-9e3f9969.esm.js';
 import { subDays } from 'date-fns';
 import '@aws-sdk/client-cost-explorer';
 import '@aws-sdk/client-organizations';
@@ -1060,4 +1060,4 @@ const EconomizePage = () => {
 const EconomizePageRoot = () => /* @__PURE__ */ React.createElement(ConfigProvider, null, /* @__PURE__ */ React.createElement(ScrollProvider, null, /* @__PURE__ */ React.createElement(EconomizePage, null)));
 
 export { EconomizePageRoot as EconomizePage };
-//# sourceMappingURL=index-907ac397.esm.js.map
+//# sourceMappingURL=index-6bb47c9c.esm.js.map
