@@ -261,19 +261,27 @@ class EconomomizeClient {
         secretAccessKey: this.configApi.getString("economize.secretAccessKey")
       }
     });
-    const orgdes = new DescribeOrganizationCommand({});
-    const orgdesRes = await client.send(orgdes);
-    const acc = new ListRootsCommand({});
-    const data1 = await client.send(acc);
-    const org = new ListOrganizationalUnitsForParentCommand({
-      ParentId: data1.Roots[0].Id
-    });
-    const data2 = await client.send(org);
-    return {
-      name: data2.OrganizationalUnits[0].Name,
-      OrgID: orgdesRes.Organization.Id,
-      AccID: orgdesRes.Organization.MasterAccountId
-    };
+    try {
+      const orgdes = new DescribeOrganizationCommand({});
+      const orgdesRes = await client.send(orgdes);
+      const acc = new ListRootsCommand({});
+      const data1 = await client.send(acc);
+      const org = new ListOrganizationalUnitsForParentCommand({
+        ParentId: data1.Roots[0].Id
+      });
+      const data2 = await client.send(org);
+      return {
+        name: data2.OrganizationalUnits[0].Name,
+        OrgID: orgdesRes.Organization.Id,
+        AccID: orgdesRes.Organization.MasterAccountId
+      };
+    } catch {
+      return {
+        name: "",
+        OrgID: "",
+        AccID: ""
+      };
+    }
   }
   async getMonthlyCost(isCredit) {
     var _a;
@@ -405,7 +413,7 @@ class EconomomizeClient {
     return topService;
   }
   async getAnomalyDelection(startDate, endDate) {
-    const data = await axios.post("https://app.economize.cloud/api/public/aws/anomaly_detection", {
+    const data = await axios.post("http://localhost:8443/public/aws/anomaly_detection", {
       endDate: endDate.toISOString().slice(0, -5).replace("T", " ") + "-07",
       startDate: startDate.toISOString().slice(0, -5).replace("T", " ") + "-07",
       type: "Prophet",
@@ -443,9 +451,9 @@ const economizePlugin = createPlugin({
 });
 const EconomizePage = economizePlugin.provide(createRoutableExtension({
   name: "EconomizePage",
-  component: () => import('./index-fc311462.esm.js').then((m) => m.EconomizePage),
+  component: () => import('./index-907ac397.esm.js').then((m) => m.EconomizePage),
   mountPoint: rootRouteRef
 }));
 
 export { EconomizePage as E, economizePlugin as a, EconomomizeClient as b, color as c, economizeApiRef as e, formatWithCurrencyUnit as f };
-//# sourceMappingURL=index-13c0c860.esm.js.map
+//# sourceMappingURL=index-c8c414d5.esm.js.map

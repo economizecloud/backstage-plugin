@@ -40,20 +40,28 @@ export class EconomomizeClient implements EconomizeApi {
         secretAccessKey: this.configApi.getString('economize.secretAccessKey'),
       },
     });
-    const orgdes = new DescribeOrganizationCommand({});
-    const orgdesRes = await client.send(orgdes);
 
-    const acc = new ListRootsCommand({});
-    const data1 = await client.send(acc);
-    const org = new ListOrganizationalUnitsForParentCommand({
-      ParentId: data1.Roots[0].Id,
-    });
-    const data2 = await client.send(org);
-    return {
-      name: data2.OrganizationalUnits[0].Name,
-      OrgID: orgdesRes.Organization.Id,
-      AccID: orgdesRes.Organization.MasterAccountId,
-    };
+    try {
+      const orgdes = new DescribeOrganizationCommand({});
+      const orgdesRes = await client.send(orgdes);
+      const acc = new ListRootsCommand({});
+      const data1 = await client.send(acc);
+      const org = new ListOrganizationalUnitsForParentCommand({
+        ParentId: data1.Roots[0].Id,
+      });
+      const data2 = await client.send(org);
+      return {
+        name: data2.OrganizationalUnits[0].Name,
+        OrgID: orgdesRes.Organization.Id,
+        AccID: orgdesRes.Organization.MasterAccountId,
+      };
+    } catch {
+      return {
+        name: '',
+        OrgID: '',
+        AccID: '',
+      };
+    }
   }
 
   async getMonthlyCost(isCredit: boolean): Promise<MonthlyCost> {
@@ -230,8 +238,8 @@ export class EconomomizeClient implements EconomizeApi {
     endDate: Date,
   ): Promise<Anomalies> {
     const data = await axios.post<Anomalies>(
-
-      'https://app.economize.cloud/api/public/aws/anomaly_detection',
+      // 'https://app.economize.cloud/api/public/aws/anomaly_detection',
+      'http://localhost:8443/public/aws/anomaly_detection',
       {
         endDate: endDate.toISOString().slice(0, -5).replace('T', ' ') + '-07',
         startDate:
