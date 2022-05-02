@@ -38,8 +38,12 @@ const Menu = () => {
   const [, setScroll] = useScroll();
   return (
     <Paper
-      style={{ backgroundColor: 'white', color: 'black' }}
-      sx={{ width: 320, maxWidth: '100%' }}
+      style={{
+        backgroundColor: 'white',
+        color: 'black',
+        width: 320,
+        maxWidth: '100%',
+      }}
     >
       <MenuList>
         {menuData.map(item => (

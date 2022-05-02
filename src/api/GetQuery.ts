@@ -10,7 +10,7 @@ export const GetQuery = {
 	  sum(line_item_unblended_cost) as cost
     FROM "${database}"."${table}"
     WHERE 
-    ${isCredit ? `line_item_line_item_type = 'Credit' AND` : ``}
+    ${isCredit ? `line_item_line_item_type not in ('Credit') AND` : ``}
 	   line_item_usage_start_date > DATE('${start_date}')
     group by 1
     order by 1;
@@ -29,7 +29,7 @@ export const GetQuery = {
   product_product_name
   from "${database}"."${table}"
   where
-  ${isCredit ? ` line_item_line_item_type = 'Credit' AND` : ``}
+  ${isCredit ? ` line_item_line_item_type not in ('Credit') AND` : ``}
 	 bill_billing_period_start_date > Date('${start_date}')
   group by 1,2,4
   order by 2;

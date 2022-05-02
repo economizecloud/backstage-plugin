@@ -12,8 +12,8 @@ import {
 import { ChartData, ScatterDataPoint } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { economizeApiRef } from '../../api';
-import { ScrollAnchor } from '../../ulits/scroll';
-import { formatWithCurrencyUnit } from '../../ulits/ulits';
+import { ScrollAnchor } from '../../utils/scroll';
+import { formatWithCurrencyUnit } from '../../utils/utils';
 import BaseLine from '../BaseComponents/BaseLine';
 
 const DailyLineChart = () => {
@@ -73,14 +73,14 @@ const DailyLineChart = () => {
       <CardContent>
         <Box sx={{ height: 500 }}>
           <BaseLine
-            yAxesCallbackFunc={label => {
+            yAxesCallbackFunc={(label: any) => {
               const formattedValue = formatWithCurrencyUnit(
                 (label === undefined ? 0 : parseFloat(label)).toFixed(2),
               );
               return formattedValue;
             }}
             tooltipCallbackFunc={{
-              label: function (context) {
+              label: function (context: any) {
                 const labelValue = context.parsed.y;
                 return (
                   ': ' +

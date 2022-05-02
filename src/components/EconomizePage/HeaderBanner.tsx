@@ -20,7 +20,7 @@ const HeaderBanner = () => {
     fetchOrgName();
   }, []);
   return (
-    <Header title="Cloud Cost Portal" subtitle="powered by economize.cloud">
+    <Header title="Cloud Cost Portalss" subtitle="powered by economize.cloud">
       {orgName.name && (
         <HeaderLabel value={orgName.name} label="Organization" />
       )}

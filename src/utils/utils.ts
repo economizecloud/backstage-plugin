@@ -83,7 +83,7 @@ export const fetchQuery = async (configApi: ConfigApi, QueryString: string) => {
   do {
     await waitFor(2 ** retries * 100);
     const getResultRes = await athenaClient.send(getQueryExecution);
-    const Status = getResultRes.QueryExecution.Status.State;
+    const Status = getResultRes?.QueryExecution?.Status?.State ?? '';
     if (Status === 'SUCCEEDED') {
       retry = false;
     } else if (['RUNNING', 'QUEUED'].includes(Status)) {
@@ -123,25 +123,25 @@ export const formatWithCurrencyUnit = (cost: string, code = 'USD') => {
   return symbol + ' ' + getNumberUnit(cost);
 };
 
-const numberWithCommas = x => {
+const numberWithCommas = (x: string) => {
   return round2Places(parseFloat(x)).toLocaleString('en-US');
 };
 
-const round2Places = num => {
+const round2Places = (num: number) => {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 };
 
-function getNumberUnit(labelValue) {
+function getNumberUnit(labelValue: string) {
   const sign = Math.sign(Number(labelValue));
   // Nine Zeroes for Billions
   return Number(labelValue) >= 1.0e9
-    ? sign * (Number(labelValue) / 1.0e9).toFixed(2) + 'B'
+    ? sign * ((Number(labelValue) / 1.0e9) as any).toFixed(2) + 'B'
     : // Six Zeroes for Millions
     Number(labelValue) >= 1.0e6
-    ? sign * (Number(labelValue) / 1.0e6).toFixed(2) + 'M'
+    ? sign * ((Number(labelValue) / 1.0e6) as any).toFixed(2) + 'M'
     : // Three Zeroes for Thousands
     Number(labelValue) >= 1.0e3
-    ? sign * (Number(labelValue) / 1.0e3).toFixed(2) + 'K'
+    ? sign * ((Number(labelValue) / 1.0e3) as any).toFixed(2) + 'K'
     : Number(labelValue) === 0.0e3
     ? sign * Number(labelValue)
     : Number(labelValue).toFixed(2);
@@ -258,7 +258,7 @@ const currencyCodes = [
   },
 ];
 
-const currencyCodeSymbolMap = currencyCodes.reduce((map, obj) => {
+const currencyCodeSymbolMap = currencyCodes.reduce((map: any, obj) => {
   map[obj.code] = obj.symbol;
   return map;
 }, {});

@@ -13,9 +13,9 @@ import { subDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { economizeApiRef } from '../../api';
-import { ErrorMessageMap } from '../../ulits/error';
-import { ScrollAnchor } from '../../ulits/scroll';
-import { formatWithCurrencyUnit } from '../../ulits/ulits';
+import { ErrorMessageMap } from '../../utils/error';
+import { ScrollAnchor } from '../../utils/scroll';
+import { formatWithCurrencyUnit } from '../../utils/utils';
 import { anomalyChartOptsConstants } from './anomalyChartConstants';
 
 const DailyLineChart = () => {
@@ -47,7 +47,7 @@ const DailyLineChart = () => {
   });
   const [Options, setOptions] = useState<any>(anomalyChartOptsConstants);
 
-  const boundColor = (ctx, color) => {
+  const boundColor = (ctx: any, color: any) => {
     return color[ctx.p0DataIndex];
   };
 
@@ -69,8 +69,8 @@ const DailyLineChart = () => {
   const fetchDailyData = async () => {
     setLoading(true);
     try {
-      const anomalyChartOpts = anomalyChartOptsConstants;
-      const anomalyIndexMap = {};
+      const anomalyChartOpts: any = anomalyChartOptsConstants;
+      const anomalyIndexMap: any = {};
 
       const anomalyData = await DailyData.getAnomalyDelection(
         dateCondition[date].StartDate,
@@ -87,8 +87,8 @@ const DailyLineChart = () => {
         return firstDate - secondDate;
       });
 
-      let projectLevelLineColor = [];
-      let chartData = {
+      let projectLevelLineColor: any[] = [];
+      let chartData: any = {
         type: 'line',
         labels: [],
         labelTimestamps: [],
@@ -100,7 +100,7 @@ const DailyLineChart = () => {
             fill: false,
             pointHoverRadius: 10,
             segment: {
-              borderColor: ctx => {
+              borderColor: (ctx: any) => {
                 return boundColor(ctx, projectLevelLineColor);
               },
             },
@@ -151,14 +151,16 @@ const DailyLineChart = () => {
           anomalyIndexMap[index] = bound.anomalyTimestampISO;
         }
       });
-      anomalyChartOpts.elements.point['radius'] = context => {
+      anomalyChartOpts.elements.point['radius'] = (context: any) => {
         if (context.dataset.label !== 'Actual Costs') {
           return 0;
         }
         let index = context.dataIndex;
         return index in anomalyIndexMap ? 8 : 0;
       };
-      anomalyChartOpts.plugins.tooltip['callbacks']['label'] = context => {
+      anomalyChartOpts.plugins.tooltip['callbacks']['label'] = (
+        context: any,
+      ) => {
         // Get the dataset label.
         const label = context.dataset.label;
         // Format the y-axis value.
@@ -175,7 +177,7 @@ const DailyLineChart = () => {
       // this.currentWeekAnomalyCost = formatWithCurrencyUnit(
       //   `${anomalyData.total_anomaly_cost}`,
       // );
-    } catch (err) {
+    } catch (err: any) {
       if (err?.response) {
         setError(
           ErrorMessageMap[err?.response?.data?.error?.message] ??

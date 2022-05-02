@@ -20,7 +20,7 @@ import {
   DescribeOrganizationCommand,
 } from '@aws-sdk/client-organizations';
 import { GetQuery } from './GetQuery';
-import { fetchQuery, getWeekRange } from '../ulits/ulits';
+import { fetchQuery, getWeekRange } from '../utils/utils';
 import axios from 'axios';
 type Options = {
   configApi: ConfigApi;
@@ -46,14 +46,26 @@ export class EconomomizeClient implements EconomizeApi {
       const orgdesRes = await client.send(orgdes);
       const acc = new ListRootsCommand({});
       const data1 = await client.send(acc);
-      const org = new ListOrganizationalUnitsForParentCommand({
-        ParentId: data1.Roots[0].Id,
-      });
-      const data2 = await client.send(org);
+
+      if (data1.Roots) {
+        const org = new ListOrganizationalUnitsForParentCommand({
+          ParentId: data1.Roots[0].Id,
+        });
+        const data2 = await client.send(org);
+
+        if (data2.OrganizationalUnits && orgdesRes.Organization) {
+          return {
+            name: data2.OrganizationalUnits[0].Name ?? '',
+            OrgID: orgdesRes.Organization.Id ?? '',
+            AccID: orgdesRes.Organization.MasterAccountId ?? '',
+          };
+        }
+      }
+
       return {
-        name: data2.OrganizationalUnits[0].Name,
-        OrgID: orgdesRes.Organization.Id,
-        AccID: orgdesRes.Organization.MasterAccountId,
+        name: '',
+        OrgID: '',
+        AccID: '',
       };
     } catch {
       return {
@@ -90,9 +102,11 @@ export class EconomomizeClient implements EconomizeApi {
       optionsCommand = {
         ...optionsCommand,
         Filter: {
-          Dimensions: {
-            Key: 'RECORD_TYPE',
-            Values: ['Credit'],
+          Not: {
+            Dimensions: {
+              Key: 'RECORD_TYPE',
+              Values: ['Credit'],
+            },
           },
         },
       };
@@ -140,9 +154,11 @@ export class EconomomizeClient implements EconomizeApi {
       optionsCommand = {
         ...optionsCommand,
         Filter: {
-          Dimensions: {
-            Key: 'RECORD_TYPE',
-            Values: ['Credit'],
+          Not: {
+            Dimensions: {
+              Key: 'RECORD_TYPE',
+              Values: ['Credit'],
+            },
           },
         },
       };

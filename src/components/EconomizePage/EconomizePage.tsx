@@ -12,34 +12,36 @@ export const EconomizePage = () => {
   return (
     <Page themeId="service">
       <HeaderBanner />
-      <Content style={{ backgroundColor: 'whitesmoke', color: 'black' }}>
-        <Grid container direction="row" spacing={5}>
-          <Grid item md={2}>
-            <Box position="sticky" top={20}>
-              <Menu />
-            </Box>
-          </Grid>
-          <Grid item md={10}>
-            <Grid container direction="column">
-              <Grid item>
-                <DailyLineChart />
-              </Grid>
-              <Grid item>
-                <WeeklyLineChart />
-              </Grid>
-              <Grid item>
-                <MonthlyLineChart />
-              </Grid>
-              <Grid item>
-                <ServiceMonthlyBarChart />
-              </Grid>
-              <Grid item>
-                <AnomalyDetection />
+      <div style={{ backgroundColor: 'whitesmoke', color: 'black' }}>
+        <Content>
+          <Grid container direction="row" spacing={5}>
+            <Grid item md={2}>
+              <Box position="sticky" top={20}>
+                <Menu />
+              </Box>
+            </Grid>
+            <Grid item md={10}>
+              <Grid container direction="column">
+                <Grid item>
+                  <DailyLineChart />
+                </Grid>
+                <Grid item>
+                  <WeeklyLineChart />
+                </Grid>
+                <Grid item>
+                  <MonthlyLineChart />
+                </Grid>
+                <Grid item>
+                  <ServiceMonthlyBarChart />
+                </Grid>
+                <Grid item>
+                  <AnomalyDetection />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Content>
+        </Content>
+      </div>
     </Page>
   );
 };

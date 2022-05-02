@@ -11,7 +11,7 @@ import {
   ScatterDataPoint,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { color } from '../../ulits/ulits';
+import { color } from '../../utils/utils';
 
 ChartJS.register(
   CategoryScale,

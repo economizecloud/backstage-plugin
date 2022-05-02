@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext, useRef } from 'r
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 import { Card, CardHeader, Grid, Typography, Switch, CardContent, Box, CircularProgress, Paper, MenuList, MenuItem, ListItemText, Select } from '@material-ui/core';
 import { Progress, Header, HeaderLabel, WarningPanel, Page, Content } from '@backstage/core-components';
-import { e as economizeApiRef, f as formatWithCurrencyUnit, c as color } from './index-9e3f9969.esm.js';
+import { e as economizeApiRef, f as formatWithCurrencyUnit, c as color } from './index-b8c7147f.esm.js';
 import { subDays } from 'date-fns';
 import '@aws-sdk/client-cost-explorer';
 import '@aws-sdk/client-organizations';
@@ -693,8 +693,12 @@ const menuData = [
 const Menu = () => {
   const [, setScroll] = useScroll();
   return /* @__PURE__ */ React.createElement(Paper, {
-    style: { backgroundColor: "white", color: "black" },
-    sx: { width: 320, maxWidth: "100%" }
+    style: {
+      backgroundColor: "white",
+      color: "black",
+      width: 320,
+      maxWidth: "100%"
+    }
   }, /* @__PURE__ */ React.createElement(MenuList, null, menuData.map((item) => /* @__PURE__ */ React.createElement(MenuItem, {
     key: item.link,
     "data-testid": `menu-item-${item.link}`,
@@ -717,7 +721,7 @@ const HeaderBanner = () => {
     fetchOrgName();
   }, []);
   return /* @__PURE__ */ React.createElement(Header, {
-    title: "Cloud Cost Portal",
+    title: "Cloud Cost Portalss",
     subtitle: "powered by economize.cloud"
   }, orgName.name && /* @__PURE__ */ React.createElement(HeaderLabel, {
     value: orgName.name,
@@ -773,9 +777,8 @@ const anomalyChartOptsConstants = {
         maxRotation: 0,
         minRotation: 0,
         callback: function(label) {
-          let realLabel = this.getLabelForValue(label);
           let timestamp, date, time;
-          timestamp = new Date(Date.parse(realLabel));
+          timestamp = new Date(Date.parse(label));
           date = timestamp.getDate() + " " + timestamp.toLocaleString("en-us", { month: "short" });
           time = timestamp.toLocaleString("en-us", {
             hour: "numeric",
@@ -823,7 +826,7 @@ const anomalyChartOptsConstants = {
           const value = formatWithCurrencyUnit(labelValue.toFixed(3));
           return `${label}: ${value}`;
         },
-        title: function(tooltipItem, data) {
+        title: function(tooltipItem) {
           const timestamp = new Date(tooltipItem[0]["label"]);
           const label = timestamp.toLocaleString("en-us", {
             day: "numeric",
@@ -1026,9 +1029,9 @@ const DailyLineChart = () => {
 const EconomizePage = () => {
   return /* @__PURE__ */ React.createElement(Page, {
     themeId: "service"
-  }, /* @__PURE__ */ React.createElement(HeaderBanner, null), /* @__PURE__ */ React.createElement(Content, {
+  }, /* @__PURE__ */ React.createElement(HeaderBanner, null), /* @__PURE__ */ React.createElement("div", {
     style: { backgroundColor: "whitesmoke", color: "black" }
-  }, /* @__PURE__ */ React.createElement(Grid, {
+  }, /* @__PURE__ */ React.createElement(Content, null, /* @__PURE__ */ React.createElement(Grid, {
     container: true,
     direction: "row",
     spacing: 5
@@ -1054,10 +1057,10 @@ const EconomizePage = () => {
     item: true
   }, /* @__PURE__ */ React.createElement(ServiceMonthlyBarChart, null)), /* @__PURE__ */ React.createElement(Grid, {
     item: true
-  }, /* @__PURE__ */ React.createElement(DailyLineChart, null)))))));
+  }, /* @__PURE__ */ React.createElement(DailyLineChart, null))))))));
 };
 
 const EconomizePageRoot = () => /* @__PURE__ */ React.createElement(ConfigProvider, null, /* @__PURE__ */ React.createElement(ScrollProvider, null, /* @__PURE__ */ React.createElement(EconomizePage, null)));
 
 export { EconomizePageRoot as EconomizePage };
-//# sourceMappingURL=index-6bb47c9c.esm.js.map
+//# sourceMappingURL=index-e11ce146.esm.js.map

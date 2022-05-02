@@ -16,7 +16,7 @@ const GetQuery = {
 	  sum(line_item_unblended_cost) as cost
     FROM "${database}"."${table}"
     WHERE 
-    ${isCredit ? `line_item_line_item_type = 'Credit' AND` : ``}
+    ${isCredit ? `line_item_line_item_type not in ('Credit') AND` : ``}
 	   line_item_usage_start_date > DATE('${start_date}')
     group by 1
     order by 1;
@@ -30,7 +30,7 @@ const GetQuery = {
   product_product_name
   from "${database}"."${table}"
   where
-  ${isCredit ? ` line_item_line_item_type = 'Credit' AND` : ``}
+  ${isCredit ? ` line_item_line_item_type not in ('Credit') AND` : ``}
 	 bill_billing_period_start_date > Date('${start_date}')
   group by 1,2,4
   order by 2;
@@ -66,6 +66,7 @@ const getWeekRange = (weekNo, yearNo) => {
   }
 };
 const fetchQuery = async (configApi, QueryString) => {
+  var _a, _b, _c;
   const athenaClient = new AthenaClient({
     region: configApi.getString("economize.region"),
     credentials: {
@@ -89,7 +90,7 @@ const fetchQuery = async (configApi, QueryString) => {
   do {
     await waitFor(2 ** retries * 100);
     const getResultRes = await athenaClient.send(getQueryExecution);
-    const Status = getResultRes.QueryExecution.Status.State;
+    const Status = (_c = (_b = (_a = getResultRes == null ? void 0 : getResultRes.QueryExecution) == null ? void 0 : _a.Status) == null ? void 0 : _b.State) != null ? _c : "";
     if (Status === "SUCCEEDED") {
       retry = false;
     } else if (["RUNNING", "QUEUED"].includes(Status)) {
@@ -254,6 +255,7 @@ class EconomomizeClient {
     this.configApi = options.configApi;
   }
   async getOrgAndProject() {
+    var _a, _b, _c;
     const client = new OrganizationsClient({
       region: this.configApi.getString("economize.region"),
       credentials: {
@@ -266,14 +268,23 @@ class EconomomizeClient {
       const orgdesRes = await client.send(orgdes);
       const acc = new ListRootsCommand({});
       const data1 = await client.send(acc);
-      const org = new ListOrganizationalUnitsForParentCommand({
-        ParentId: data1.Roots[0].Id
-      });
-      const data2 = await client.send(org);
+      if (data1.Roots) {
+        const org = new ListOrganizationalUnitsForParentCommand({
+          ParentId: data1.Roots[0].Id
+        });
+        const data2 = await client.send(org);
+        if (data2.OrganizationalUnits && orgdesRes.Organization) {
+          return {
+            name: (_a = data2.OrganizationalUnits[0].Name) != null ? _a : "",
+            OrgID: (_b = orgdesRes.Organization.Id) != null ? _b : "",
+            AccID: (_c = orgdesRes.Organization.MasterAccountId) != null ? _c : ""
+          };
+        }
+      }
       return {
-        name: data2.OrganizationalUnits[0].Name,
-        OrgID: orgdesRes.Organization.Id,
-        AccID: orgdesRes.Organization.MasterAccountId
+        name: "",
+        OrgID: "",
+        AccID: ""
       };
     } catch {
       return {
@@ -307,9 +318,11 @@ class EconomomizeClient {
       optionsCommand = {
         ...optionsCommand,
         Filter: {
-          Dimensions: {
-            Key: "RECORD_TYPE",
-            Values: ["Credit"]
+          Not: {
+            Dimensions: {
+              Key: "RECORD_TYPE",
+              Values: ["Credit"]
+            }
           }
         }
       };
@@ -353,9 +366,11 @@ class EconomomizeClient {
       optionsCommand = {
         ...optionsCommand,
         Filter: {
-          Dimensions: {
-            Key: "RECORD_TYPE",
-            Values: ["Credit"]
+          Not: {
+            Dimensions: {
+              Key: "RECORD_TYPE",
+              Values: ["Credit"]
+            }
           }
         }
       };
@@ -451,9 +466,9 @@ const economizePlugin = createPlugin({
 });
 const EconomizePage = economizePlugin.provide(createRoutableExtension({
   name: "EconomizePage",
-  component: () => import('./index-6bb47c9c.esm.js').then((m) => m.EconomizePage),
+  component: () => import('./index-e11ce146.esm.js').then((m) => m.EconomizePage),
   mountPoint: rootRouteRef
 }));
 
 export { EconomizePage as E, economizePlugin as a, EconomomizeClient as b, color as c, economizeApiRef as e, formatWithCurrencyUnit as f };
-//# sourceMappingURL=index-9e3f9969.esm.js.map
+//# sourceMappingURL=index-b8c7147f.esm.js.map

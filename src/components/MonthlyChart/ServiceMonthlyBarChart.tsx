@@ -12,8 +12,8 @@ import {
 import { ChartData, ChartDataset, ScatterDataPoint } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { economizeApiRef } from '../../api';
-import { ScrollAnchor } from '../../ulits/scroll';
-import { formatWithCurrencyUnit } from '../../ulits/ulits';
+import { ScrollAnchor } from '../../utils/scroll';
+import { formatWithCurrencyUnit } from '../../utils/utils';
 import BaseBar from '../BaseComponents/BaseBar';
 
 const ServiceMonthlyBarChart = () => {
@@ -57,8 +57,12 @@ const ServiceMonthlyBarChart = () => {
 
     dataset = dataset
       .sort(function (a, b) {
-        const bdata = b.data.reduce((a, b) => parseFloat(a) + parseFloat(b));
-        const adata = a.data.reduce((a, b) => parseFloat(a) + parseFloat(b));
+        const bdata: any = b.data.reduce(
+          (a: any, b: any) => parseFloat(a) + parseFloat(b),
+        );
+        const adata: any = a.data.reduce(
+          (a: any, b: any) => parseFloat(a) + parseFloat(b),
+        );
         return bdata - adata;
       })
       .slice(0, 5);
@@ -110,14 +114,14 @@ const ServiceMonthlyBarChart = () => {
             ) : (
               <Box sx={{ height: 500 }}>
                 <BaseBar
-                  yAxesCallbackFunc={label => {
+                  yAxesCallbackFunc={(label: any) => {
                     const formattedValue = formatWithCurrencyUnit(
                       (label === undefined ? 0 : parseFloat(label)).toFixed(2),
                     );
                     return formattedValue;
                   }}
                   tooltipCallbackFunc={{
-                    label: function (context) {
+                    label: function (context: any) {
                       const label = context.dataset.label;
 
                       const labelValue = context.parsed.y;

@@ -1,4 +1,4 @@
-import { formatWithCurrencyUnit } from '../../ulits/ulits';
+import { formatWithCurrencyUnit } from '../../utils/utils';
 
 const anomalyChartOptsConstants = {
   responsive: true,
@@ -34,10 +34,9 @@ const anomalyChartOptsConstants = {
         maxTicksLimit: 11,
         maxRotation: 0,
         minRotation: 0,
-        callback: function (label) {
-          let realLabel = this.getLabelForValue(label);
+        callback: function (label: any) {
           let timestamp, date, time;
-          timestamp = new Date(Date.parse(realLabel));
+          timestamp = new Date(Date.parse(label));
           date =
             timestamp.getDate() +
             ' ' +
@@ -59,7 +58,7 @@ const anomalyChartOptsConstants = {
       },
       ticks: {
         beginAtZero: true,
-        callback: function (value) {
+        callback: function (value: any) {
           if (parseInt(value, 10) >= 1000) {
             return formatWithCurrencyUnit(value);
           }
@@ -82,7 +81,7 @@ const anomalyChartOptsConstants = {
       mode: 'index',
       intersect: false,
       callbacks: {
-        label: function (context) {
+        label: function (context: any) {
           // Get the dataset label.
           const label = context.dataset.label;
           // Format the y-axis value.
@@ -91,7 +90,7 @@ const anomalyChartOptsConstants = {
           const value = formatWithCurrencyUnit(labelValue.toFixed(3));
           return `${label}: ${value}`;
         },
-        title: function (tooltipItem, data) {
+        title: function (tooltipItem: any) {
           const timestamp = new Date(tooltipItem[0]['label']);
           const label = timestamp.toLocaleString('en-us', {
             day: 'numeric',
